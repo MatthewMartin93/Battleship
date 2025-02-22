@@ -1,22 +1,26 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+
+char e;
 void printer(char grid[10][10]);
 bool place(char ships[10][10], int a, int b, int len, bool orient);
+//cclear
 void clearConsole() {
-
 #ifdef _WIN32
     system("cls");
 #else
-    system("clear");  // for the others
+    system("clear");  
 #endif
 }
+
 int main() {
     char grid[10][10];
     char ships[10][10];
     int remaining_ships = 0;
-    int guesses = 30;
-    char e;
+     int guesses = 30;
+    
+    
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
             grid[i][j] = '-';
@@ -24,6 +28,7 @@ int main() {
         }
     }
 
+    // Place ships 
     srand(time(NULL));
     int lengths[] = {5, 4, 3, 3, 2};
     for (int i = 0; i < 5; i++) {
@@ -34,72 +39,99 @@ int main() {
             bool orient = rand() % 2;
             places = place(ships, a, b, lengths[i], orient);
         }
-        remaining_ships += lengths[i];
+        remaining_ships += lengths[i]; 
     }
 
-    std::cout << "Map:" << std::endl;
-    printer(ships);
-
+    
     int row, col;
     int shots = 0;
     
-    while(remaining_ships > 0 & guesses > 0){
-        std::cout << "Shots taken: " << shots << std::endl;
-        std::cout << "Spots remaining: " << remaining_ships << std::endl;
-        std::cout << "Guesses Remaining: "<< guesses << std::endl;
+    while (remaining_ships > 0 && shots < guesses) {
+        clearConsole();
+        std::cout << "Shots taken: " << shots << " (Max: " << guesses << ")" << std::endl;
+        std::cout << "Ships remaining: " << remaining_ships << std::endl;
+        std::cout << "\nYour guesses:\n";
+        printer(grid);
         
-        
-       
-        std::cout << "\nEnter target coordinates (column row): ";
+    
+        std::cout << "\nEnter target coordinates (row column): ";
         std::cin >> row >> col;
-
+        
+  
         if (row < 0 || row >= 10 || col < 0 || col >= 10) {
-            std::cout << "that aint on the map(any to continue)";
+            std::cout << "not on the map press any key to continue";
+            std::cin >> e;
+            continue;
+        }
+        
+        // Already guessed this location
+        if (grid[row][col] != '-') {
+            std::cout << "alreayd guessed press any key to continue";
             std::cin >> e;
             continue;
         }
         
         shots++;
-        guesses--;
-
-        if (ships[col][row] == 'S')
-        {
-            std::cout<<"target hit"<<std::endl;
+        
+        // Check if hit
+        if (ships[row][col] == 'S') {
+            grid[row][col] = 'X'; 
+            ships[row][col] = 'X'; 
+            remaining_ships--;
+            std::cout << "HIT";
+        } else {
+            grid[row][col] = 'M'; 
+            std::cout << "Miss";
         }
-
-
+        std::cin >> e;
     }
-
     
-
-
+    // Game over
+    clearConsole();
+    if (remaining_ships == 0) {
+        std::cout << "You sunk all the ships in " << shots << " shots!\n";
+    } else {
+        std::cout << "You've used all " << guesses << " guesses.\n";
+        std::cout << "Ships remaining: " << remaining_ships << "\n";
+        
+        // Show ship locations
+        std::cout << "\nHere were the ship locations:\n";
+        printer(ships);
+    }
+    
+    std::cout << "\nYour final board:\n";
+    printer(grid);
+    
+    std::cout << "\nPress any key to exit";
+    std::cin >> e;
     return 0;
 }
 
 void printer(char grid[10][10]) {
-    // print column numbers
-    std::cout << "   ";  
+    //numbers
+    std::cout << "   ";
     for (int j = 0; j < 10; j++) {
         std::cout << j << "  ";
     }
     std::cout << std::endl;
     
-
+    // line
     std::cout << "   ";
     for (int j = 0; j < 10; j++) {
         std::cout << "---";
     }
     std::cout << std::endl;
     
-    // print row nymbers 
+    // numbers
     for (int i = 0; i < 10; i++) {
-        std::cout << i << " |";  
+        std::cout << i << " |";
         for (int j = 0; j < 10; j++) {
             std::cout << " " << grid[i][j] << " ";
         }
         std::cout << std::endl;
     }
 }
+
 // place the ships 
 bool place(char ships[10][10], int a, int b, int len, bool orient) {
     if (orient) {
