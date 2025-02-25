@@ -18,7 +18,7 @@ int main() {
     char grid[10][10];
     char ships[10][10];
     int remaining_ships = 0;
-     int guesses = 30;
+     int guesses = 40;
     
     
     for (int i = 0; i < 10; i++) {
