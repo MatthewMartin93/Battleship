@@ -21,6 +21,11 @@ void clearConsole() {
 }
 
 int main() {
+    std::cout << "Instructions" << std::endl;
+    std::cout << "Enter your guess in (row, column) format. Please do not include parenthesis." << std::endl;
+    std::cout << "You have 40 guesses to sink all 5 ships" << std::endl;
+    std::cout << "Enter anything to continue" << std::endl;
+    std::cin >> e;
     char grid[10][10];
     char ships[10][10];
     int remaining_ships = 0;
