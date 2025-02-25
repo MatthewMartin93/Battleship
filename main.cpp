@@ -1,3 +1,8 @@
+// Atharva and Matthew
+// 2D Array Game
+// 2/25
+// Extra: Color Output
+
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
@@ -5,7 +10,8 @@
 char e;
 void printer(char grid[10][10]);
 bool place(char ships[10][10], int a, int b, int len, bool orient);
-//cclear
+
+// Clear console
 void clearConsole() {
 #ifdef _WIN32
     system("cls");
@@ -18,8 +24,7 @@ int main() {
     char grid[10][10];
     char ships[10][10];
     int remaining_ships = 0;
-     int guesses = 40;
-    
+    int guesses = 30;
     
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 10; j++) {
@@ -79,9 +84,11 @@ int main() {
             ships[row][col] = 'X'; 
             remaining_ships--;
             std::cout << "HIT";
+            std::cout<<" Enter anything then enter to next guess"<<std::endl;
         } else {
             grid[row][col] = 'M'; 
             std::cout << "Miss";
+            std::cout<<" Enter anything then enter to next guess"<<std::endl;
         }
         std::cin >> e;
     }
@@ -126,7 +133,19 @@ void printer(char grid[10][10]) {
     for (int i = 0; i < 10; i++) {
         std::cout << i << " |";
         for (int j = 0; j < 10; j++) {
-            std::cout << " " << grid[i][j] << " ";
+            if (grid[i][j] == 'X') {
+                // Red 
+                std::cout << " \033[1;31mX\033[0m ";
+            } else if (grid[i][j] == 'M') {
+                // Blue 
+                std::cout << " \033[1;34mM\033[0m ";
+            } else if (grid[i][j] == 'S') {
+                // Green
+                std::cout << " \033[1;32mS\033[0m ";
+            } else {
+                // Default
+                std::cout << " " << grid[i][j] << " ";
+            }
         }
         std::cout << std::endl;
     }
